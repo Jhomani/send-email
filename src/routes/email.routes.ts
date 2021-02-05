@@ -22,7 +22,7 @@ route.post('/send', async (req: Request, res: Response) => {
     console.log(process.env.EMAIL, req.body.email);
 
     await transporter.sendMail({
-      from: `"Fred Foo 👻" <${process.env.EMAIL}>`,
+      from: `J Carlos Mamani <${process.env.EMAIL}>`,
       to: req.body.email,  // list of emails
       subject: "This is a test sender emails",
       html: output
