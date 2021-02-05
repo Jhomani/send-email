@@ -17,6 +17,9 @@ route.post('/send', async (req: Request, res: Response) => {
         user: "juancarlos69528125@gmail.com",
         pass: "69528125j",
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
     console.log(process.env.EMAIL, req.body.email);
