@@ -54,13 +54,13 @@ route.post('/send', function (req, res) { return __awaiter(void 0, void 0, void 
                 transporter = nodemailer_1.default.createTransport({
                     service: "gmail",
                     auth: {
-                        user: process.env.EMAIL,
-                        pass: process.env.EMAIL_PASS,
+                        user: "juancarlos69528125@gmail.com",
+                        pass: "69528125j",
                     },
                 });
                 console.log(process.env.EMAIL, req.body.email);
                 return [4 /*yield*/, transporter.sendMail({
-                        from: "\"Fred Foo \uD83D\uDC7B\" <" + process.env.EMAIL + ">",
+                        from: "J Carlos Mamani <" + process.env.EMAIL + ">",
                         to: req.body.email,
                         subject: "This is a test sender emails",
                         html: output
