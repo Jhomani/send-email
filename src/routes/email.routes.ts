@@ -6,10 +6,15 @@ import { google } from "googleapis";
 const route = express.Router();
 
 route.post('/send', async (req: Request, res: Response) => {
+  const { message, email, name } = req.body;
+
+  if (!email && !message) return res.status(422).json({ error: "email and message is required" });
+
+
   const output = `
-    <h3>Message for ${req.body.name}</h3>
+    <h3>Message for ${name || "anonimos"}</h3>
     <p>you have a new message</p>
-    <p>${req.body.message}</p>
+    <p>${message}</p>
   `
 
   const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URL);
@@ -30,19 +35,19 @@ route.post('/send', async (req: Request, res: Response) => {
       },
     });
 
-    console.log(process.env.EMAIL, req.body.email);
+    console.log(process.env.EMAIL, email);
 
     await transporter.sendMail({
       from: `WITH GOOGLE TOKEN <${process.env.EMAIL}>`,
-      to: req.body.email,  // list of emails
+      to: email,  // list of emails
       subject: "This is a test sender emails",
       html: output
     });
 
-    res.render("contact", { layout: false })
+    res.json({ message: "the email was send successfuly" });
   } catch (err) {
     console.log(err);
-    res.render("contact", { layout: false })
+    res.status(500).json({ message: "we can't send that email" });
   }
 })
 
