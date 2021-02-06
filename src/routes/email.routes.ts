@@ -1,6 +1,7 @@
 import express from 'express';
 import { Response, Request } from 'express';
 import nodemailer from "nodemailer";
+import { google } from "googleapis";
 
 const route = express.Router();
 
@@ -10,22 +11,29 @@ route.post('/send', async (req: Request, res: Response) => {
     <p>you have a new message</p>
     <p>${req.body.message}</p>
   `
+
+  const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URL);
+  oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+
   try {
+    const accessToken: any = await oAuth2Client.getAccessToken();
+
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
+        type: "OAuth2",
         user: "juancarlos69528125@gmail.com",
-        pass: "69528125j",
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: accessToken
       },
-      tls: {
-        rejectUnauthorized: false
-      }
     });
 
     console.log(process.env.EMAIL, req.body.email);
 
     await transporter.sendMail({
-      from: `J Carlos Mamani <${process.env.EMAIL}>`,
+      from: `WITH GOOGLE TOKEN <${process.env.EMAIL}>`,
       to: req.body.email,  // list of emails
       subject: "This is a test sender emails",
       html: output
